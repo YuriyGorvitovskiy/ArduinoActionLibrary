@@ -1,14 +1,14 @@
 /**
  ** This is Public Domain Software.
- ** 
- ** The author disclaims copyright to this source code.  
+ **
+ ** The author disclaims copyright to this source code.
  ** In place of a legal notice, here is a blessing:
  **
  **    May you do good and not evil.
  **    May you find forgiveness for yourself and forgive others.
  **    May you share freely, never taking more than you give.
  **/
- 
+
 #include <Arduino.h>
 #include "ActionSequence.h"
 
@@ -27,12 +27,13 @@ long ActionSequence::start() {
 }
 
 long ActionSequence::progress() {
-	for(Action* action = sequence[next>>1]; action != NULL; action = sequence[(++next)>>1]) {
+	for(Action* action = sequence[next>>1]; action != NULL; action = sequence[next>>1]) {
 		long delay = ((next & 1) == 0) ? action->start() : action->progress();
 		if (delay != ACTION_COMPLETE) {
 			next |= 1; // if sub action has not completed next call should be progress
 			return delay;
 		}
+        next = ((next + 2) & ~1);
 	}
 	return ACTION_COMPLETE;
 }
@@ -43,4 +44,3 @@ void ActionSequence::cancel() {
 		action->cancel();
 	next = 0;
 }
-
