@@ -21,3 +21,21 @@ void SingleAction::cancel() {
 long Delay::start() {
     return milliseconds;
 }
+
+long RedundantSingleAction::start() {
+    attempts = 0;
+    return progress();
+}
+
+long RedundantSingleAction::progress() {
+    if (attempts >= maxAttempts || (attempts > 0 && check()))
+        return ACTION_COMPLETE;
+
+    attempts++;
+    execute();
+    return msCheckDelay;
+}
+
+void RedundantSingleAction::cancel() {
+    attempts = maxAttempts;
+}

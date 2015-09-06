@@ -39,4 +39,22 @@ public:
 protected:
     long milliseconds;
 };
+
+class RedundantSingleAction : public SingleAction {
+public:
+	RedundantSingleAction(int maxAttempts, long msCheckDelay) : maxAttempts(maxAttempts), msCheckDelay(msCheckDelay) {}
+
+	virtual long start();
+	virtual long progress();
+	virtual void cancel();
+
+	virtual void 	execute() = 0;
+	virtual boolean check()   = 0;
+
+protected:
+	int  attempts;
+	int  maxAttempts;
+	long msCheckDelay;
+};
+
 #endif //__ACTION_H__
