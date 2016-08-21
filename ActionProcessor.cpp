@@ -41,6 +41,11 @@ void ActionProcessor::start(Action* action) {
 		return;
 
 	for(int i = 0; i < MAX_SIMULTANEOUS_ACTIONS; ++i) {
+		if (actions[i] == action) {
+			timers[i] = millis() + delay;
+			return;
+		}
+
 		if (actions[i] != NULL)
 			continue;
 
